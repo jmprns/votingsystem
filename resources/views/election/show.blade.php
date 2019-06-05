@@ -83,7 +83,7 @@
                                         @endswitch
                                     </td>
                                     <td>{{ $position->max }}</td>
-                                    <td></td>
+                                    <td>{{ $position->candidates->count() }}</td>
                                     <td align="center">
                                         <button class="btn btn-warning btn-sm btn-bitbucket" title="Edit">
                                             <i class="fa fa-pencil"></i>
@@ -121,12 +121,26 @@
                                 <th>Name</th>
                                 <th>Course - Year</th>
                                 <th>Position</th>
-                                <th>Partylist</th>
+                                <th>Party</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            
+                            @php($x = 1)
+                            @foreach($candidates as $candidate)
+                            @php($cname = explode('__', $candidate->info->name))
+                                <tr>
+                                    <td>{{ $x++ }}</td>
+                                    <td></td>
+                                    <td>{{ $cname[0] }}, {{ $cname[1] }} {{ $cname[2][0] }}.</td>
+                                    <td>{{ $candidate->info->course->name }} - {{ $candidate->info->year->name }}</td>
+                                    <td>{{ $candidate->position->name }}</td>
+                                    <td>{{ $candidate->party->name }}</td>
+                                    <td>
+                                        
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -174,7 +188,7 @@
                                     </td>
                                     <td align="center">
                                         @if($voter->isCandidate == 0)
-                                            <a href="/election/candidate/{{ $election->id }}" class="btn btn-success btn-sm btn-bitbucket" title="Add Candidate">
+                                            <a href="/election/candidate/{{ $election->id }}/{{ $voter->id }}" class="btn btn-success btn-sm btn-bitbucket" title="Add Candidate">
                                                 <i class="fa fa-user"></i>
                                             </a>
                                         @endif

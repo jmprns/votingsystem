@@ -75,8 +75,13 @@ Voter List
                                             <span class="label label-danger">Uncast</span>
                                         @endif
                                     </td>
-                                    <td>
-                                        
+                                    <td align="center">
+                                        <button class="btn btn-warning btn-sm btn-bitbucket" title="Edit">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button onclick="deleteVoter('{{ $voter->id }}')" class="btn btn-danger btn-sm btn-bitbucket" title="Delete">
+                                            <i class="fa fa-trash-o"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -133,5 +138,19 @@ $(document).ready(function(){
     });
 
 });
+
+function deleteVoter(id){
+    swal({
+        title: "Delete this voter?",
+        text: "Linked information to this voter will also be delete. Continue?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes",
+        closeOnConfirm: false
+    }, function () {
+       window.location = '/voters/delete/'+id;
+    });
+}
 </script>
 @endsection

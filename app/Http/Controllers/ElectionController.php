@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Election;
 use App\Voter;
 use App\Position;
+use App\Candidate;
 
 class ElectionController extends Controller
 {
@@ -90,13 +91,16 @@ class ElectionController extends Controller
             return abort(404);
         }
 
-        $positions = Position::where('elc_id', $id)->get();
+        $positions = Position::with('candidates')->where('elc_id', $id)->get();
 
         $voters = Voter::with('course', 'year')->where('elc_id', $id)->get();
+
+        $candidates = Candidate::with('info', 'position', 'party')->where('elc_id', $id)->get();
 
         return view('election.show')
                 ->with('election', $election)
                 ->with('positions', $positions)
+                ->with('candidates', $candidates)
                 ->with('voters', $voters);
     }
 

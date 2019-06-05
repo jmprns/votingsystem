@@ -137,6 +137,16 @@
 <!-- Sweet alert -->
 <script src="{{ asset('vendor/sweetalert/sweetalert.min.js') }}"></script>
 
+<script type="text/javascript">
+    @if(session('success'))
+        toastr.success("{{ session('success') }}");
+    @endif
+
+    @if(session('error'))
+        toastr.error("{{ session('error') }}");
+    @endif
+</script>
+
 @section('js-bot')
 @show
 

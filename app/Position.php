@@ -12,4 +12,9 @@ class Position extends Model
     	'max',
     	'elc_id'
     ];
+
+    public function candidates()
+    {
+    	return $this->hasMany('App\Candidate', 'position_id');
+    }
 }

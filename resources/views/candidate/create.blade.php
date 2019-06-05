@@ -8,6 +8,7 @@ Candidate for {{ $election->name }}
 {{-- CSS VENDOR --}}
 @section('css-top')
 <link href="{{ asset('vendor/chosen/chosen.css') }}" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{{ asset('vendor/croppie/croppie.css') }}">
 @endsection
 
 {{-- CSS STYLES --}}
@@ -43,7 +44,7 @@ Candidate for {{ $election->name }}
 {{-- MAIN CONTENT --}}
 @section('main')
 <div class="row">
-    <div id="add-voter-whirl" class="col-lg-12">
+    <div id="add-candidate-whirl" class="col-lg-12">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <h5>Fill up the form with correct responding value</h5>
@@ -52,7 +53,7 @@ Candidate for {{ $election->name }}
                 </div>
             </div>
             <div class="ibox-content">
-                <form id="add-voter-form" method="POST" class="form-horizontal">
+                <form id="add-candidate-form" method="POST" class="form-horizontal">
 
                     <div class="form-group"><label class="col-sm-2 control-label">Full Name</label>
                         <div class="col-sm-10">
@@ -60,7 +61,7 @@ Candidate for {{ $election->name }}
                                 @php($name = explode('__', $voter->name))
                                 <div class="col-md-3"><input type="text" class="form-control" readonly value="{{ $name[0] }}"></div>
                                 <div class="col-md-3"><input type="text" class="form-control" readonly value="{{ $name[1] }}"></div>
-                                <div class="col-md-2"><input type="text" class="form-control" readonly value="{{ $name[2][0] }}."></div>
+                                <div class="col-md-2"><input type="text" class="form-control" readonly value="{{ $name[2] }}"></div>
                             </div>
                         </div>
                     </div>
@@ -111,7 +112,8 @@ Candidate for {{ $election->name }}
                         <div class="col-sm-10">
                             <div class="row">
                                 <div class="col-md-8">
-                                    <input type="file" class="form-control" required>
+                                    <input type="hidden" id="crop-image" value="">
+                                    <input type="file" name="upload_image" id="upload_image" accept="image/*" class="form-control">
                                 </div>
                                
                             </div>
@@ -124,8 +126,8 @@ Candidate for {{ $election->name }}
 
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">
-                            <button class="btn btn-white" type="reset">Reset</button>
-                            <button class="btn btn-primary" type="submit">Add Voter</button>
+                            <a href="/election/show/{{ $election->id }}" class="btn btn-white">Return Back</a>
+                            <button class="btn btn-primary" type="submit">Add Candidate</button>
                         </div>
                     </div>
 
@@ -134,13 +136,37 @@ Candidate for {{ $election->name }}
         </div>
     </div>
 </div>
+
+<!-- Modal Image Cropper -->
+<div id="uploadimageModal" class="modal" role="dialog">
+ <div class="modal-dialog">
+  <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Upload & Crop Image</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+       <div class="col-md-12 text-center">
+        <div id="image_demo"></div>
+       </div>
+    </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-success crop_image">Crop</button>
+        </div>
+     </div>
+    </div>
+</div><!-- /.modal -->
 @endsection
 
 {{-- JS VENDOR --}}
 @section('js-top')
 <!-- Chosen -->
 <script src="{{ asset('vendor/chosen/chosen.jquery.js') }}"></script>
-
+<script src="{{ asset('vendor/croppie/croppie.min.js') }}"></script>
+<script src="{{ asset('vendor/croppie/exif.js') }}"></script>
 @endsection
 
 {{-- JS SECTION --}}
@@ -155,28 +181,75 @@ toastr.warning("There is no position found. Please create an position first to r
     $("#party-select").chosen();
 </script>
 <script>
-$('#add-position-form').submit(function(e){
+$(document).ready(function(){
 
-     e.preventDefault();
+    $image_crop = $('#image_demo').croppie({
+        enableExif: true,
+        viewport: {
+            width:200,
+            height:200,
+            type:'square' //circle
+        },
+        boundary:{
+            width:300,
+            height:300
+        }
+    });
+
+    $('#upload_image').on('change', function(){
+        var reader = new FileReader();
+        reader.onload = function (event) {
+        $image_crop.croppie('bind', {
+            url: event.target.result
+        }).then(function(){
+          console.log('jQuery bind complete');
+        });
+        }
+        reader.readAsDataURL(this.files[0]);
+        $('#uploadimageModal').modal('show');
+    });
+
+    $('.crop_image').click(function(event){
+        $image_crop.croppie('result', {
+            type: 'canvas',
+            size: 'viewport',
+            format: 'jpeg'
+        }).then(function(response){
+            console.log(response);
+            $('#crop-image').val(response);
+            $('#uploadimageModal').modal('toggle');
+        })
+    });
+
+});
+$('#add-candidate-form').submit(function(e){
+
+    e.preventDefault();
 
     $.ajax({
-        url: "/election/position",
+        url: "/election/candidate/add",
         type: 'POST',
         dataType: 'json',
         data:{
             '_token' : $("meta[name='_token']").attr("content"),
-            'name' : $('#name').val(),
-            'type' : $('#type').val(),
-            'choice' : $('#choice').val(),
-            'election' : {{ $election->id }}
+            'position' : $('#position-select').val(),
+            'party' : $('#party-select').val(),
+            'image' : $('#crop-image').val(),
+            'voter' : {{ $voter->id }}
         },
         success:function(Result)
         {   
-            toastr.success("Position has been added.");
-            $('#name').val('');
-            $('#choice').val('');
-            $('#type').val('1');
-            $('#name').focus();
+            swal({
+                title: "Success",
+                text: "The candidate has been added.",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Ok",
+                closeOnConfirm: false
+            }, function () {
+               window.location = '/election/show/{{ $election->id }}'
+            });
         },
         error:function(xhr){
             if(xhr.status == 406){
@@ -187,11 +260,11 @@ $('#add-position-form').submit(function(e){
             }
         },
         beforeSend: function(){
-            var element = document.getElementById('add-position-whirl');
+            var element = document.getElementById('add-candidate-whirl');
             element.classList.add("whirl", "traditional");
         },
         complete: function(){
-            var element = document.getElementById('add-position-whirl');
+            var element = document.getElementById('add-candidate-whirl');
             element.classList.remove("whirl", "traditional");
         }
     });

@@ -8,6 +8,7 @@ use App\Voter;
 use App\Election;
 use App\Year;
 use App\Course;
+use App\Candidate;
 
 use Hash;
 
@@ -149,6 +150,17 @@ class VoterController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $voter = Voter::find($id);
+
+        //Validating the voter
+        if(!$voter){
+            return redirect('/voters/')->with('error', 'The voter you want to delete was not found in the system.');
+        }
+
+        $voter->delete();
+        Candidate::where('voter_id', $id)->delete();
+
+        return redirect('/voters/')->with('success', 'The voter has been deleted in the system.');
+
     }
 }

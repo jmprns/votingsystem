@@ -40,7 +40,7 @@ Route::prefix('election')->group(function(){
 	// Candidate Route
 	Route::prefix('candidate')->group(function(){
 		Route::get('/{eid}/{vid}', 'CandidateController@create');
-		Route::post('/', 'CandidateController@store');
+		Route::post('/add', 'CandidateController@store');
 	});
 
 
@@ -59,6 +59,7 @@ Route::prefix('voters')->group(function(){
 	Route::get('/', 'VoterController@index');
 	Route::get('/add', 'VoterController@create');
 	Route::post('/add', 'VoterController@store');
+	Route::get('/delete/{id}', 'VoterController@destroy');
 });
 
 

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Election;
+use App\Position;
+
 class ResultController extends Controller
 {
     public function __construct()
@@ -13,6 +16,11 @@ class ResultController extends Controller
 
     public function index($id)
     {
-    	return view('election.result');
+    	$election = Election::find($id);
+    	$positions = Position::with(['candidates.info', 'candidates.party', 'candidates' => function($q){$q->withCount('votes');}])->where('elc_id', $id)->get();
+    	return view('election.result')
+    			->with('election', $election)
+    			->with('positions', $positions);
     }
 }
+   

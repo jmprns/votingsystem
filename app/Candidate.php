@@ -33,4 +33,9 @@ class Candidate extends Model
     {
     	return $this->belongsTo('App\Party', 'party_id');
     }
+
+    public function votes()
+    {
+        return $this->hasMany('App\Vote', 'candidate_id');
+    }
 }

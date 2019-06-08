@@ -32,7 +32,7 @@
         </ol>
     </div>
     <div class="col-lg-2" >
-        <button class="btn btn-primary" style="margin-top: 30px;">Election Result</button>
+        <a href="/election/result/{{ $election->id }}" class="btn btn-primary" style="margin-top: 30px;">Election Result</a>
     </div>
 </div>
 @endsection

@@ -65,7 +65,7 @@
                             <tr>
                                 <td>{{ $x++ }}</td>
                                 <td><strong><a href="/election/show/{{ $election->id }}">{{ $election->name }}</a></strong></td>
-                                <td></td>
+                                <td>{{ $election->candidates->count() }}</td>
                                 <td>{{ $election->voters->count() }}</td>
                                 <td><a title="Casted Votes">{{ $election->voters->where('cast', '1')->count() }}</a> || <a title="Uncast Votes">{{ $election->voters->where('cast', '0')->count() }}</a></td>
                                 <td>

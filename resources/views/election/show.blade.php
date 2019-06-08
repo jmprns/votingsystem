@@ -131,8 +131,10 @@
                             @php($cname = explode('__', $candidate->info->name))
                                 <tr>
                                     <td>{{ $x++ }}</td>
-                                    <td></td>
-                                    <td>{{ $cname[0] }}, {{ $cname[1] }} {{ $cname[2][0] }}.</td>
+                                    <td align="center">
+                                        <img src="{{ asset('img/candidates') }}/{{ $candidate->image }}" class="img-circle" width="50px" height="50px">
+                                    </td>
+                                    <td>{{ $cname[0] }}, {{ $cname[1] }} {{ @$cname[2][0] }}.</td>
                                     <td>{{ $candidate->info->course->name }} - {{ $candidate->info->year->name }}</td>
                                     <td>{{ $candidate->position->name }}</td>
                                     <td>{{ $candidate->party->name }}</td>
@@ -177,7 +179,7 @@
                                 <tr>
                                     <td>{{ $voter->id }}</td>
                                     <td>{{ $voter->password }}</td>
-                                    <td>{{ $name[0] }}, {{ $name[1] }} {{ $name[2][0] }}.</td>
+                                    <td>{{ $name[0] }}, {{ $name[1] }} {{ @$name[2][0] }}.</td>
                                     <td>{{ $voter->course->name }} - {{ $voter->year->name }}</td>
                                     <td align="center">
                                         @if($voter->cast == 0)

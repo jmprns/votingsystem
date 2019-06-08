@@ -16,6 +16,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Auth::routes();
+Route::get('/home', 'HomeController@index')->name('home');
+
 /**
 * Administrator Routes.
 * This group handles all the url of administrative controlls
@@ -41,6 +44,10 @@ Route::prefix('election')->group(function(){
 	Route::prefix('candidate')->group(function(){
 		Route::get('/{eid}/{vid}', 'CandidateController@create');
 		Route::post('/add', 'CandidateController@store');
+	});
+
+	Route::prefix('result')->group(function(){
+		Route::get('/{id}', 'ResultController@index');
 	});
 
 
@@ -70,6 +77,14 @@ Route::prefix('voters')->group(function(){
 *
 */
 
-Auth::routes();
+Route::prefix('ballot')->group(function(){
+	Route::get('/', 'BallotController@login');
+	Route::post('/', 'BallotController@form');
+	Route::post('/review', 'BallotController@review');
+	Route::post('/cast/{vid}', 'BallotController@cast');
+	Route::get('/handler', 'BallotController@handler');
+});
 
-Route::get('/home', 'HomeController@index')->name('home');
+
+
+

@@ -12,4 +12,9 @@ class Election extends Model
     {
     	return $this->hasMany('App\Voter', 'elc_id');
     }
+
+    public function candidates()
+    {
+    	return $this->hasMany('App\Candidate', 'elc_id');
+    }
 }

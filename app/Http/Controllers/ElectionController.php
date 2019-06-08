@@ -13,6 +13,10 @@ use App\Candidate;
 
 class ElectionController extends Controller
 {
+    public function __construct()
+    {
+        return $this->middleware('auth');
+    }
     /**
     *
 	* Election Index

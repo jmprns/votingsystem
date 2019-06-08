@@ -65,7 +65,7 @@ Voter List
                                 <tr>
                                     <td>{{ $voter->id }}</td>
                                     <td>{{ $voter->password }}</td>
-                                    <td>{{ $name[0].", ".$name[1]." ".$name[2][0]."." }}</td>
+                                    <td>{{ $name[0].", ".$name[1]." ".@$name[2][0]."." }}</td>
                                     <td>{{ $voter->course['name'] }} - {{ $voter->year['name'] }}</td>
                                     <td><a href="/election/show/{{ $voter->election->id }}"><strong>{{ $voter->election->name }}</strong></a></td>
                                     <td align="center">

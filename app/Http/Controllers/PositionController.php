@@ -9,6 +9,10 @@ use App\Position;
 
 class PositionController extends Controller
 {
+    public function __construct()
+    {
+        return $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *

@@ -44,8 +44,8 @@
                     <div class="dropdown profile-element"> <span>
                             <img alt="image" class="img-circle" src="{{ asset('img/users/default.jpg') }}" width="50px" height="50px" />
                              </span>
-                        
-                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold" style="color: white;">David Williams</strong>
+                            @php($adminName = explode('__',Auth::user()->name))
+                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold" style="color: white;">{{ $adminName[1] }} {{ $adminName[0] }}</strong>
                              </span>  </span> </a>
                         
                     </div>
@@ -71,7 +71,7 @@
                 </li>
 
                 <li @if(strpos(url()->current(), request()->getHttpHost().'/settings') == true) class="active" @endif>
-                    <a href="/settings"><i class="fa fa-cogs"></i> <span class="nav-label">Settins</span></a>
+                    <a href="/settings"><i class="fa fa-cogs"></i> <span class="nav-label">Settings</span></a>
                 </li>
                 
             </ul>

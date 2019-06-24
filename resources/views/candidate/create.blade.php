@@ -43,6 +43,11 @@ Candidate for {{ $election->name }}
 
 {{-- MAIN CONTENT --}}
 @section('main')
+@if($positions->count() == 0)
+<div class="alert alert-warning">
+  <strong>Warning!</strong> There is no position found. Please <a href="/election/position/{{ $election->id }}" class="alert-link"> create a position </a> first to register candidates.
+</div>
+@endif
 <div class="row">
     <div id="add-candidate-whirl" class="col-lg-12">
         <div class="ibox float-e-margins">
@@ -171,11 +176,6 @@ Candidate for {{ $election->name }}
 
 {{-- JS SECTION --}}
 @section('js-bot')
-<script>
-@if($positions->count() == 0)
-toastr.warning("There is no position found. Please create an position first to register candidates.", "Warning");
-@endif
-</script>
 <script>
     $("#position-select").chosen();
     $("#party-select").chosen();

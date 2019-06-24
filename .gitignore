@@ -3,6 +3,10 @@
 /public/storage
 /storage/*.key
 /vendor
+/public/candidates/*
+/public/users/*
+!/public/candidates/default.jpg
+!/public/users/default.jpg
 .env
 .phpunit.result.cache
 Homestead.json

@@ -9,6 +9,7 @@ use App\Election;
 use App\Year;
 use App\Course;
 use App\Candidate;
+use App\Vote;
 
 use Hash;
 
@@ -131,7 +132,19 @@ class VoterController extends Controller
      */
     public function edit($id)
     {
-        //
+        $voter = Voter::find($id);
+
+        if(!$voter){
+            return abort(404);
+        }
+
+        $elections = Election::all();
+        $years = Year::all();
+
+        return view('voter.edit')
+                ->with('voter', $voter)
+                ->with('elections', $elections)
+                ->with('years', $years);
     }
 
     /**
@@ -143,7 +156,26 @@ class VoterController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $voter = Voter::find($id);
+
+        if(!$voter){
+            return response()->json([
+                'message' => 'Voter not found.'
+            ],406);
+        }
+
+        $cy = explode('__', $request->cy);
+
+
+        $voter->name = $request->lname."__".$request->fname."__".$request->mname;
+        $voter->course_id = $cy[0];
+        $voter->year_id = $cy[1];
+        $voter->elc_id = $request->election;
+        $voter->save();
+
+        return response()->json([
+            'message' => 'Voter has been updated.'
+        ],200);
     }
 
     /**
@@ -163,6 +195,7 @@ class VoterController extends Controller
 
         $voter->delete();
         Candidate::where('voter_id', $id)->delete();
+        Vote::where('voter_id', $id)->delete();
 
         return redirect('/voters/')->with('success', 'The voter has been deleted in the system.');
 

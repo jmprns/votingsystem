@@ -64,7 +64,16 @@ Party
                                     <td>{{ $x++ }}</td>
                                     <td>{{ $party->name }}</td>
                                     <td>{{ $party->candidates->count() }}</td>
-                                    <td></td>
+                                    <td align="center">
+                                        @if($party->id != 1)
+                                        <button class="btn btn-warning btn-sm btn-bitbucket" title="Edit" onclick="editParty('{{ $party->id }}', '{{ $party->name }}')">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button class="btn btn-danger btn-sm btn-bitbucket" title="Delete" onclick="deleteParty('{{ $party->id }}')">
+                                            <i class="fa fa-trash-o"></i>
+                                        </button>
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -105,72 +114,36 @@ Party
     </div>
 </div>
 
-<div class="modal inmodal fade" id="election-edit" tabindex="-1" role="dialog"  aria-hidden="true">
-    <div id="add-election-whirl" class="modal-dialog">
+<div class="modal inmodal fade" id="party-edit" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div id="edit-party-whirl" class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Edit Election</h4>
+                <h4 class="modal-title">Edit Party</h4>
             </div>
             <div class="modal-body">
-               <form id="edit-election-form" method="POST">
+               <form id="edit-party-form" method="POST">
 
                    <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="control-label">Election Name</label>
-                                <input required type="text" id="electionName" class="form-control">
+                                <label class="control-label">Party Name</label>
+                                <input required type="hidden" id="editPartyId">
+                                <input required type="text" id="editPartyName" class="form-control">
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row">
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="control-label">Election Start Date</label>
-                                <input required type="date" id="start-date" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="control-label">Election Start Time</label>
-                                <input required type="time" id="start-time" class="form-control">
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="row">
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="control-label">Election End Date</label>
-                                <input required type="date" id="end-date" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="control-label">Election End Time</label>
-                                <input required type="time" id="end-time" class="form-control">
-                            </div>
-                        </div>
-                        
                     </div>
 
                
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Add Election</button>
+                <button type="submit" class="btn btn-primary">Update Party</button>
             </div>
             </form>
         </div>
     </div>
 </div>
-
 
 @endsection
 
@@ -267,6 +240,80 @@ $('#add-party-form').submit(function(e){
         }
     });
 });
+
+$('#edit-party-form').submit(function(e){
+
+    e.preventDefault();
+
+    $.ajax({
+        url: "/party/update",
+        type: 'POST',
+        dataType: 'json',
+        data:{
+            '_token' : $("meta[name='_token']").attr("content"),
+            'pid' : $('#editPartyId').val(),
+            'pname' : $('#editPartyName').val(),
+        },
+        success:function(Result)
+        {   
+            // $("#party-add").modal('toggle');
+
+            swal({
+                title: "Success",
+                text: "The party has been updated.",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Ok",
+                closeOnConfirm: false
+            }, function () {
+               location.reload();
+            });
+            
+
+        },
+        error:function(xhr){
+            if(xhr.status == 406){
+                var message_er = JSON.parse(xhr.responseText);
+                toastr.error(message_er['message']);
+            }else if(xhr.status == 422){
+                toastr.error("All fields are required!");
+            }
+        },
+        beforeSend: function(){
+            var element = document.getElementById('edit-party-whirl');
+            element.classList.add("whirl", "traditional");
+        },
+        complete: function(){
+            var element = document.getElementById('edit-party-whirl');
+            element.classList.remove("whirl", "traditional");
+        }
+    });
+});
+
+
+function editParty(id, name)
+{
+    $('#editPartyId').val(id);
+    $('#editPartyName').val(name);
+    $('#party-edit').modal('toggle');
+
+}
+
+function deleteParty(id)
+{
+    swal({
+        title: "Delete this party?",
+        text: "Deleting this party will make the members independent",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Ok",
+        closeOnConfirm: false
+    }, function () {
+        window.location = '/party/delete/'+id;
+    });
+}
 </script>
 
 @endsection

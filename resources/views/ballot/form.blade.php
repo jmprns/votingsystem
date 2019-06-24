@@ -94,6 +94,7 @@
                                                 <div class="center-div">
                                                     <select name="position-ballot-{{ $position->id }}[]" id="choices-ballot-{{ $position->id }}" multiple="multiple" data-limit="{{ $position->max }}" class="image-picker text-center">
                                                         <option value=""></option>
+                                                        @php($candidates = $candidates->shuffle())
 
                                                         @foreach($candidates as $candidate)
                                                        @php($cname = explode('__', $candidate->info->name))
@@ -126,7 +127,7 @@
                                                 <div class="center-div">
                                                     <select name="position-ballot-{{ $position->id }}" id="choices-ballot-{{ $position->id }}" class="image-picker text-center">
                                                         <option value=""></option>
-
+                                                        @php($candidates = $candidates->shuffle())
                                                         @foreach($candidates as $candidate)
                                                        @php($cname = explode('__', $candidate->info->name))
                                                         <option 
@@ -163,7 +164,7 @@
                                                 <div class="center-div">
                                                     <select name="position-ballot-{{ $position->id }}[]" id="choices-ballot-{{ $position->id }}" multiple="multiple" data-limit="{{ $position->max }}" class="image-picker text-center">
                                                         <option value=""></option>
-
+                                                        @php($candidates = $candidates->shuffle())
                                                         @foreach($candidates as $candidate)
                                                        @php($cname = explode('__', $candidate->info->name))
                                                         <option 
@@ -195,7 +196,7 @@
                                                 <div class="center-div">
                                                     <select name="position-ballot-{{ $position->id }}" id="choices-ballot-{{ $position->id }}" class="image-picker text-center">
                                                         <option value=""></option>
-
+                                                        @php($candidates = $candidates->shuffle())
                                                         @foreach($candidates as $candidate)
                                                        @php($cname = explode('__', $candidate->info->name))
                                                         <option 
@@ -233,7 +234,7 @@
                                                 <div class="center-div">
                                                     <select name="position-ballot-{{ $position->id }}[]" id="choices-ballot-{{ $position->id }}" multiple="multiple" data-limit="{{ $position->max }}" class="image-picker text-center">
                                                         <option value=""></option>
-
+                                                        @php($candidates = $candidates->shuffle())
                                                         @foreach($candidates as $candidate)
                                                        @php($cname = explode('__', $candidate->info->name))
                                                         <option 
@@ -265,7 +266,7 @@
                                                 <div class="center-div">
                                                     <select name="position-ballot-{{ $position->id }}" id="choices-ballot-{{ $position->id }}" class="image-picker text-center">
                                                         <option value=""></option>
-
+                                                        @php($candidates = $candidates->shuffle())
                                                         @foreach($candidates as $candidate)
                                                        @php($cname = explode('__', $candidate->info->name))
                                                         <option 

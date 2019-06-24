@@ -2,7 +2,7 @@
 
 {{-- HTML TITLE --}}
 @section('html-title')
-Position fot {{ $election->name }}
+Position for {{ $election->name }}
 @endsection
 
 {{-- CSS VENDOR --}}

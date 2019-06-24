@@ -2,6 +2,7 @@
 
 {{-- HTML TITLE --}}
 @section('html-title')
+Election List
 @endsection
 
 {{-- CSS VENDOR --}}

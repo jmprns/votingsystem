@@ -76,9 +76,9 @@ Voter List
                                         @endif
                                     </td>
                                     <td align="center">
-                                        <button class="btn btn-warning btn-sm btn-bitbucket" title="Edit">
+                                        <a href="/voters/edit/{{ $voter->id }}" class="btn btn-warning btn-sm btn-bitbucket" title="Edit">
                                             <i class="fa fa-pencil"></i>
-                                        </button>
+                                        </a>
                                         <button onclick="deleteVoter('{{ $voter->id }}')" class="btn btn-danger btn-sm btn-bitbucket" title="Delete">
                                             <i class="fa fa-trash-o"></i>
                                         </button>
@@ -129,7 +129,7 @@ $(document).ready(function(){
                 autoPrint:false,
                 exportOptions:{
                     columns: [0, 1,2,3,4,5],
-                    stripHtml: false
+                    stripHtml: true
                 }
 
             }

@@ -57,6 +57,8 @@ Route::prefix('election')->group(function(){
 Route::prefix('party')->group(function(){
 	Route::get('/', 'PartyController@index');
 	Route::post('/add', 'PartyController@store');
+	Route::get('/delete/{id}', 'PartyController@destroy');
+	Route::post('/update', 'PartyController@update');
 });
 
 
@@ -67,6 +69,8 @@ Route::prefix('voters')->group(function(){
 	Route::get('/add', 'VoterController@create');
 	Route::post('/add', 'VoterController@store');
 	Route::get('/delete/{id}', 'VoterController@destroy');
+	Route::get('/edit/{id}', 'VoterController@edit');
+	Route::post('/update/{id}', 'VoterController@update');
 });
 
 

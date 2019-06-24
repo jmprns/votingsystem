@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Party;
+use App\Candidate;
 
 class PartyController extends Controller
 {
@@ -92,9 +93,22 @@ class PartyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $party = Party::find($request->pid);
+
+        if(!$party){
+            return response()->json([
+                'message' => 'Invalid party.'
+            ], 406);
+        }
+
+        $party->name = $request->pname;
+        $party->save();
+
+        return response()->json([
+            'message' => 'Party has been updated.'
+        ],200);
     }
 
     /**
@@ -105,6 +119,31 @@ class PartyController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // checking the party
+        $party = Party::find($id);
+
+        if($id == 1){
+            return redirect()->back()->with('error', 'You cannot delete this party.');
+        }
+
+        // validating
+        if(!$party){
+            return redirect()->back()->with('error', 'Party not found in the system.');
+        }
+
+        $candidates = Candidate::where('party_id', $id)->get();
+
+        foreach($candidates as $candidate){
+
+            $cand = Candidate::find($candidate->id);
+            $cand->party_id = 1;
+            $cand->save();
+        }
+
+        Party::find($id)->delete();
+
+        return redirect()->back()->with('success', 'Party has been deleted.');
+
+
     }
 }

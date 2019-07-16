@@ -46,8 +46,11 @@ Route::prefix('election')->group(function(){
 
 	// Candidate Route
 	Route::prefix('candidate')->group(function(){
+		Route::get('/destroy/{id}', 'CandidateController@destroy');
+		Route::get('/edit/{id}', 'CandidateController@edit');
 		Route::get('/{eid}/{vid}', 'CandidateController@create');
 		Route::post('/add', 'CandidateController@store');
+		Route::post('/update/{id}', 'CandidateController@update');
 	});
 
 	Route::prefix('result')->group(function(){

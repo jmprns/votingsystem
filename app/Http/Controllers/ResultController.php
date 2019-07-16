@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Election;
 use App\Position;
+use App\Voter;
 
 class ResultController extends Controller
 {
@@ -31,7 +32,13 @@ class ResultController extends Controller
 
     public function printAll($id)
     {
-        return view('election.resultPrintAll');
+        $election = Election::find($id);
+        $positions = Position::with(['candidates.info','candidates.info.course','candidates.info.year', 'candidates.party', 'candidates' => function($q){$q->withCount('votes');}])->where('elc_id', $id)->get();
+        $voters = Voter::where('elc_id', $id)->get();
+        return view('election.resultPrintAll')
+                ->with('positions', $positions)
+                ->with('voters', $voters)
+                ->with('election', $election);
     }
 
     public function printWinner($id)

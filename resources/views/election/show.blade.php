@@ -139,10 +139,10 @@
                                     <td>{{ $candidate->position->name }}</td>
                                     <td>{{ $candidate->party->name }}</td>
                                     <td align="center">
-                                        <a href="/election/voters/edit/{{ $candidate->id }}" class="btn btn-warning btn-sm btn-bitbucket" title="Edit">
+                                        <a href="/election/candidate/edit/{{ $candidate->id }}" class="btn btn-warning btn-sm btn-bitbucket" title="Edit">
                                             <i class="fa fa-pencil"></i>
                                         </a>
-                                        <button onclick="deleteVoter('{{ $candidate->id }}')" class="btn btn-danger btn-sm btn-bitbucket" title="Delete">
+                                        <button onclick="deleteCandidate('{{ $candidate->id }}')" class="btn btn-danger btn-sm btn-bitbucket" title="Delete">
                                             <i class="fa fa-trash-o"></i>
                                         </button>
                                     </td>
@@ -339,6 +339,21 @@ function deleteVoter(id){
         closeOnConfirm: false
     }, function () {
        window.location = '/election/voters/delete/'+id;
+    });
+}
+
+
+function deleteCandidate(id){
+    swal({
+        title: "Delete this candidate?",
+        text: "Linked information to this candidate will also be delete. Continue?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes",
+        closeOnConfirm: false
+    }, function () {
+       window.location = '/election/candidate/destroy/'+id;
     });
 }
 

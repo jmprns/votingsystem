@@ -27,8 +27,7 @@ td, th {
 </head>
 <body>
 <h1 align="center">ELECTION RESULT</h1>
-<h2 align="center">NATIONAL ELECTION</h2>
-
+<h2 align="center">{{ strtoupper($election->name) }}</h2>
 
 <table>
 	<thead>
@@ -39,7 +38,7 @@ td, th {
 		    <th colspan="3">VOTES</th>
   		</tr>
 		<tr>
-			<td>TOTAL</td>
+			<td>VOTERS</td>
 			<td>ACCUMULATED</td>
 			<td>PERCENTAGE</td>
 		</tr>
@@ -47,7 +46,29 @@ td, th {
 	</thead>
 
 	<tbody>
+		@foreach($positions as $position)
+			@if($position->type == 1)
 
+				@php($candidates = $position->candidates->sortByDesc('votes_count'))
+                @php($x = 1)
+
+                @foreach($candidates as $candidate)
+                @php($cname = explode('__', $candidate->info->name))
+                    <tr>
+                        <td colspan="3"><strong>{{ $position->name }}</strong></td>
+                        <td colspan="3">{{ $cname[0] }}, {{ $cname[1] }} {{ @$cname[2][0] }}</td>
+                        <td colspan="3">{{ $candidate->party->name }}</td>
+                        <td>{{ $voters->count() }}</td>
+                        <td>{{ $candidate->votes_count }}</td>
+                        <td>{{ vote_percentage($candidate->votes_count, $voters->count()) }}%</td>
+                    </tr>
+                @endforeach
+
+			@elseif($position->type ==2)
+
+			@else
+			@endif
+		@endforeach
 	</tbody>
 </table>
 </body>

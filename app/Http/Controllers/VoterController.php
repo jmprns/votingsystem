@@ -26,9 +26,7 @@ class VoterController extends Controller
      */
     public function index()
     {
-        $voters = Voter::with('course', 'year', 'election')->get();
-        return view('voter.list')
-                ->with('voters', $voters);
+        
     }
 
     /**
@@ -36,12 +34,18 @@ class VoterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        $elections = Election::all();
+        $election = Election::find($id);
+
+        // checking if election exists
+        if(!$election){
+            return abort(404);
+        }
+
         $years = Year::all();
         return view('voter.add')
-                ->with('elections', $elections)
+                ->with('election', $election)
                 ->with('years', $years);
     }
 
@@ -138,12 +142,13 @@ class VoterController extends Controller
             return abort(404);
         }
 
-        $elections = Election::all();
         $years = Year::all();
+
+        $election = Election::find($voter->elc_id);
 
         return view('voter.edit')
                 ->with('voter', $voter)
-                ->with('elections', $elections)
+                ->with('election', $election)
                 ->with('years', $years);
     }
 
@@ -170,7 +175,6 @@ class VoterController extends Controller
         $voter->name = $request->lname."__".$request->fname."__".$request->mname;
         $voter->course_id = $cy[0];
         $voter->year_id = $cy[1];
-        $voter->elc_id = $request->election;
         $voter->save();
 
         return response()->json([
@@ -193,11 +197,13 @@ class VoterController extends Controller
             return redirect('/voters/')->with('error', 'The voter you want to delete was not found in the system.');
         }
 
+        $election_id = $voter->elc_id;
+
         $voter->delete();
         Candidate::where('voter_id', $id)->delete();
         Vote::where('voter_id', $id)->delete();
 
-        return redirect('/voters/')->with('success', 'The voter has been deleted in the system.');
+        return redirect("/election/show/{$election_id}")->with('success', 'The voter has been deleted in the system.');
 
     }
 }

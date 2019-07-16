@@ -17,7 +17,7 @@ Position for {{ $election->name }}
 @section('bread')
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
-        <h2>Add Position</h2>
+        <h2>Edit Position</h2>
         <ol class="breadcrumb">
             <li>
                 <a href="/dashboard">Voting System</a>
@@ -29,7 +29,7 @@ Position for {{ $election->name }}
                 <a href="/election/show/{{ $election->id }}">{{ $election->name }}</a>
             </li>
             <li class="active">
-                <strong>Add Position</strong>
+                <strong>Edit Position</strong>
             </li>
         </ol>
     </div>
@@ -56,7 +56,7 @@ Position for {{ $election->name }}
                     <div class="form-group"><label class="col-sm-2 control-label">Name</label>
                         <div class="col-sm-10">
                             <div class="row">
-                                <div class="col-md-6"><input type="text" id="name" placeholder="Position Name" class="form-control" required></div>
+                                <div class="col-md-6"><input type="text" id="name" placeholder="Position Name" value="{{ $position->name }}" class="form-control" required></div>
                             </div>
                         </div>
                     </div>
@@ -68,9 +68,9 @@ Position for {{ $election->name }}
                             <div class="row">
                                 <div class="col-md-6">
                                     <select id="type" class="form-control" required>
-                                        <option value="1">All (All registered voters to this election can vote.)</option>
-                                        <option value="2">Strand (Voters can vote specific candidate according to strand)</option>
-                                        <option value="3">Year (Voters can vote specific candidate according to year)</option>
+                                        <option @if($position->type == 1) selected @endif value="1">All (All registered voters to this election can vote.)</option>
+                                        <option @if($position->type == 2) selected @endif value="2">Strand (Voters can vote specific candidate according to strand)</option>
+                                        <option @if($position->type == 3) selected @endif value="3">Year (Voters can vote specific candidate according to year)</option>
                                     </select>
                                 </div>
                             </div>
@@ -82,7 +82,7 @@ Position for {{ $election->name }}
                     <div class="form-group"><label class="col-sm-2 control-label">Max Choices</label>
                         <div class="col-sm-10">
                             <div class="row">
-                                <div class="col-md-6"><input type="number" id="choice" placeholder="Max Choices" class="form-control" required></div>
+                                <div class="col-md-6"><input type="number" id="choice" placeholder="Max Choices" class="form-control" value="{{ $position->max }}" required></div>
                             </div>
                         </div>
                     </div>
@@ -92,7 +92,7 @@ Position for {{ $election->name }}
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">
                             <a href="/election/show/{{ $election->id }}" class="btn btn-white">Return Back</a>
-                            <button class="btn btn-primary" type="submit">Add Position</button>
+                            <button class="btn btn-primary" type="submit">Update Position</button>
                         </div>
                     </div>
 
@@ -115,23 +115,30 @@ $('#add-position-form').submit(function(e){
      e.preventDefault();
 
     $.ajax({
-        url: "/election/position",
+        url: "/election/position/update/{{ $position->id }}",
         type: 'POST',
         dataType: 'json',
         data:{
             '_token' : $("meta[name='_token']").attr("content"),
             'name' : $('#name').val(),
             'type' : $('#type').val(),
-            'choice' : $('#choice').val(),
-            'election' : {{ $election->id }}
+            'max' : $('#choice').val()
         },
         success:function(Result)
         {   
-            toastr.success("Position has been added.");
-            $('#name').val('');
-            $('#choice').val('');
-            $('#type').val('1');
-            $('#name').focus();
+            swal({
+                title: "Success",
+                text: "The position has been updated.",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Ok",
+                closeOnConfirm: false
+            }, function () {
+               window.location = '/election/show/{{ $election->id }}'
+            });
+
+
         },
         error:function(xhr){
             if(xhr.status == 406){

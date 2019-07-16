@@ -17,15 +17,16 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/home', function () {
+    return redirect('/election');
+});
 /**
 * Administrator Routes.
 * This group handles all the url of administrative controlls
 *
 */
 
-Route::get('dashboard', 'DashboardController@index');
 
 // Election Route
 Route::prefix('election')->group(function(){
@@ -38,6 +39,9 @@ Route::prefix('election')->group(function(){
 	Route::prefix('position')->group(function(){
 		Route::get('/{id}', 'PositionController@create');
 		Route::post('/', 'PositionController@store');
+		Route::get('/delete/{id}', 'PositionController@destroy');
+		Route::get('/edit/{id}', 'PositionController@edit');
+		Route::post('/update/{id}', 'PositionController@update');
 	});
 
 	// Candidate Route
@@ -48,6 +52,17 @@ Route::prefix('election')->group(function(){
 
 	Route::prefix('result')->group(function(){
 		Route::get('/{id}', 'ResultController@index');
+		Route::get('/print/{id}/all', 'ResultController@printAll');
+		Route::get('/print/{id}/winner', 'ResultController@printWinner');
+	});
+
+	// Voters Route
+	Route::prefix('voters')->group(function(){
+		Route::get('/add/{id}', 'VoterController@create');
+		Route::post('/add', 'VoterController@store');
+		Route::get('/delete/{id}', 'VoterController@destroy');
+		Route::get('/edit/{id}', 'VoterController@edit');
+		Route::post('/update/{id}', 'VoterController@update');
 	});
 
 
@@ -62,16 +77,6 @@ Route::prefix('party')->group(function(){
 });
 
 
-
-// Voters Route
-Route::prefix('voters')->group(function(){
-	Route::get('/', 'VoterController@index');
-	Route::get('/add', 'VoterController@create');
-	Route::post('/add', 'VoterController@store');
-	Route::get('/delete/{id}', 'VoterController@destroy');
-	Route::get('/edit/{id}', 'VoterController@edit');
-	Route::post('/update/{id}', 'VoterController@update');
-});
 
 
 

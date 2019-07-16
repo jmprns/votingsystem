@@ -73,7 +73,7 @@
                                                 All
                                             @break
                                             @case(2)
-                                                Course
+                                                Strand
                                             @break
                                             @case(3)
                                                 Year
@@ -85,10 +85,10 @@
                                     <td>{{ $position->max }}</td>
                                     <td>{{ $position->candidates->count() }}</td>
                                     <td align="center">
-                                        <button class="btn btn-warning btn-sm btn-bitbucket" title="Edit">
+                                        <a href="/election/position/edit/{{ $position->id }}" class="btn btn-warning btn-sm btn-bitbucket" title="Edit">
                                             <i class="fa fa-pencil"></i>
-                                        </button>
-                                        <button class="btn btn-danger btn-sm btn-bitbucket" title="Delete">
+                                        </a>
+                                        <button onclick="deletePosition('{{ $position->id }}')" class="btn btn-danger btn-sm btn-bitbucket" title="Delete">
                                             <i class="fa fa-trash-o"></i>
                                         </button>
                                     </td>
@@ -138,8 +138,13 @@
                                     <td>{{ $candidate->info->course->name }} - {{ $candidate->info->year->name }}</td>
                                     <td>{{ $candidate->position->name }}</td>
                                     <td>{{ $candidate->party->name }}</td>
-                                    <td>
-                                        
+                                    <td align="center">
+                                        <a href="/election/voters/edit/{{ $candidate->id }}" class="btn btn-warning btn-sm btn-bitbucket" title="Edit">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                        <button onclick="deleteVoter('{{ $candidate->id }}')" class="btn btn-danger btn-sm btn-bitbucket" title="Delete">
+                                            <i class="fa fa-trash-o"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -157,7 +162,7 @@
             <div class="ibox-title">
                 <h5>Voter List</h5>
                 <div class="ibox-tools">
-                    <button class="btn btn-success btn-xs" data-toggle="modal" data-target="#election-add"><i class="fa fa-plus"></i>&nbsp;&nbsp;<span class="bold">Add New Voter</span></button>
+                    <a href="/election/voters/add/{{ $election->id }}" class="btn btn-success btn-xs" style="color:white;"><i class="fa fa-plus"></i>&nbsp;&nbsp;<span class="bold">Add New Voter</span></a>
                 </div>
             </div>
             <div class="ibox-content">
@@ -194,10 +199,10 @@
                                                 <i class="fa fa-user"></i>
                                             </a>
                                         @endif
-                                        <button class="btn btn-warning btn-sm btn-bitbucket" title="Edit">
+                                        <a href="/election/voters/edit/{{ $voter->id }}" class="btn btn-warning btn-sm btn-bitbucket" title="Edit">
                                             <i class="fa fa-pencil"></i>
-                                        </button>
-                                        <button class="btn btn-danger btn-sm btn-bitbucket" title="Delete">
+                                        </a>
+                                        <button onclick="deleteVoter('{{ $voter->id }}')" class="btn btn-danger btn-sm btn-bitbucket" title="Delete">
                                             <i class="fa fa-trash-o"></i>
                                         </button>
                                     </td>
@@ -322,5 +327,35 @@ $(document).ready(function(){
     });
 
 });
+
+function deleteVoter(id){
+    swal({
+        title: "Delete this voter?",
+        text: "Linked information to this voter will also be delete. Continue?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes",
+        closeOnConfirm: false
+    }, function () {
+       window.location = '/election/voters/delete/'+id;
+    });
+}
+
+function deletePosition(id){
+
+    swal({
+        title: "Delete this position?",
+        text: "All candidates related to this position will also be removed. Continue?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes",
+        closeOnConfirm: false
+    }, function () {
+       window.location = '/election/position/delete/'+id;
+    });
+
+}
 </script>
 @endsection

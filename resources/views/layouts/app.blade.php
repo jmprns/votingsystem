@@ -54,9 +54,6 @@
                     </div>
                 </li>
 
-                <li @if(strpos(url()->current(), request()->getHttpHost().'/dashboard') == true) class="active" @endif>
-                    <a href="/dashboard"><i class="fa fa-th-large"></i> <span class="nav-label">Dashboard</span></a>
-                </li>
 
                 <li @if(strpos(url()->current(), request()->getHttpHost().'/election') == true) class="active" @endif>
                     <a href="/election"><i class="fa fa-archive"></i> <span class="nav-label">Election</span></a>
@@ -66,9 +63,6 @@
                     <a href="/party"><i class="fa fa-flag"></i> <span class="nav-label">Party</span></a>
                 </li>
 
-                <li @if(strpos(url()->current(), request()->getHttpHost().'/voters') == true) class="active" @endif>
-                    <a href="/voters"><i class="fa fa-group"></i> <span class="nav-label">Voters</span></a>
-                </li>
 
                 <li @if(strpos(url()->current(), request()->getHttpHost().'/settings') == true) class="active" @endif>
                     <a href="/settings"><i class="fa fa-cogs"></i> <span class="nav-label">Settings</span></a>

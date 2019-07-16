@@ -24,7 +24,10 @@ Add Voter
                 <a href="/dashboard">Voting System</a>
             </li>
             <li>
-                <a href="/voters">Voter</a>
+                <a href="/election">Election</a>
+            </li>
+            <li>
+                <a href="/election/show/{{ $election->id }}">{{ $election->name }}</a>
             </li>
             <li class="active">
                 <strong>Add Voter</strong>
@@ -82,23 +85,6 @@ Add Voter
 
                     <div class="hr-line-dashed"></div>
 
-                    <div class="form-group"><label class="col-sm-2 control-label">Election</label>
-                        <div class="col-sm-10">
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <select data-placeholder="Choose Election" id="election-select" class="form-control" style="width:100%;" tabindex="4" required>
-                                        <option value="">Choose Election</option>
-                                        @foreach($elections as $election)
-                                            <option value="{{ $election->id }}">{{ $election->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="hr-line-dashed"></div>
-
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">
                             <button class="btn btn-white" type="reset">Reset</button>
@@ -124,13 +110,6 @@ Add Voter
 @section('js-bot')
 <script type="text/javascript">
     $("#cy-select").chosen();
-    $("#election-select").chosen();
-</script>
-
-<script>
-@if($elections->count() == 0)
-toastr.warning("There is no election found. Please create an election first to register voters.", "Warning");
-@endif
 </script>
 
 <script>
@@ -139,7 +118,7 @@ $('#add-voter-form').submit(function(e){
      e.preventDefault();
 
     $.ajax({
-        url: "/voters/add",
+        url: "/election/voters/add",
         type: 'POST',
         dataType: 'json',
         data:{
@@ -148,7 +127,7 @@ $('#add-voter-form').submit(function(e){
             'fname' : $('#fname').val(),
             'mname' : $('#mname').val(),
             'cy' : $('#cy-select').val(),
-            'election' : $('#election-select').val()
+            'election' : {{ $election->id }}
         },
         success:function(Result)
         {   

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Election;
 use App\Position;
+use App\Candidate;
+use App\Voter;
 
 class PositionController extends Controller
 {
@@ -101,7 +103,18 @@ class PositionController extends Controller
      */
     public function edit($id)
     {
-        //
+        $position = Position::find($id);
+
+        if(!$position){
+            return abort(404);
+        }
+
+        $election = Election::find($position->elc_id);
+
+        return view('position.edit')
+                ->with('election', $election)
+                ->with('position', $position);
+
     }
 
     /**
@@ -113,7 +126,23 @@ class PositionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $position = Position::find($id);
+
+        if(!$position){
+                return abort(404);
+        }
+
+        $position->name = $request->name;
+        $position->type = $request->type;
+        $position->max = $request->max;
+
+        $position->save();
+
+        return response()->json([
+            'message' => 'Position has been updated.'
+        ], 200);
+
+
     }
 
     /**
@@ -124,6 +153,25 @@ class PositionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $position = Position::find($id);
+
+        $elc_id = $position->elc_id;
+
+        $position->delete();
+
+        $candidates = Candidate::where('position_id', $id)->get();
+
+        foreach($candidates as $candidate){
+
+            $voter = Voter::find($candidate->voter_id);
+            $voter->isCandidate = 0;
+            $voter->save();
+
+            Candidate::find($candidate->id)->delete();
+
+        }
+
+        return redirect("/election/show/{$elc_id}")->with('success', 'Position has been deleted.');
+
     }
 }

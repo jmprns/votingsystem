@@ -24,10 +24,13 @@ Edit Voter
                 <a href="/dashboard">Voting System</a>
             </li>
             <li>
-                <a href="/voters">Voter</a>
+                <a href="/election">Election</a>
+            </li>
+            <li>
+                <a href="/election/show/{{ $election->id }}">{{ $election->name }}</a>
             </li>
             <li class="active">
-                <strong>Edit Voter</strong>
+                <strong>Add Voter</strong>
             </li>
         </ol>
     </div>
@@ -82,26 +85,10 @@ Edit Voter
 
                     <div class="hr-line-dashed"></div>
 
-                    <div class="form-group"><label class="col-sm-2 control-label">Election</label>
-                        <div class="col-sm-10">
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <select data-placeholder="Choose Election" id="election-select" class="form-control" style="width:100%;" tabindex="4" required>
-                                        <option value="">Choose Election</option>
-                                        @foreach($elections as $election)
-                                            <option value="{{ $election->id }}" @if($voter->elc_id == $election->id) selected @endif>{{ $election->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="hr-line-dashed"></div>
 
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">
-                            <a href="/voters" class="btn btn-white" type="reset">Return Back</a>
+                            <a href="/election/show/{{ $election->id }}" class="btn btn-white" type="reset">Return Back</a>
                             <button class="btn btn-primary" type="submit">Update Voter</button>
                         </div>
                     </div>
@@ -133,7 +120,7 @@ $('#edit-voter-form').submit(function(e){
      e.preventDefault();
 
     $.ajax({
-        url: "/voters/update/{{ $voter->id }}",
+        url: "/election/voters/update/{{ $voter->id }}",
         type: 'POST',
         dataType: 'json',
         data:{
@@ -141,8 +128,7 @@ $('#edit-voter-form').submit(function(e){
             'lname' : $('#lname').val(),
             'fname' : $('#fname').val(),
             'mname' : $('#mname').val(),
-            'cy' : $('#cy-select').val(),
-            'election' : $('#election-select').val()
+            'cy' : $('#cy-select').val()
         },
         success:function(Result)
         {   
@@ -155,7 +141,7 @@ $('#edit-voter-form').submit(function(e){
                 confirmButtonText: "Ok",
                 closeOnConfirm: false
             }, function () {
-               window.location = '/voters/'
+               window.location = '/election/show/{{ $election->id }}'
             });
             
         },

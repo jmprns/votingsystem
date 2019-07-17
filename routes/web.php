@@ -21,6 +21,10 @@ Auth::routes();
 Route::get('/home', function () {
     return redirect('/election');
 });
+
+Route::get('/dashboard', function () {
+    return redirect('/election');
+});
 /**
 * Administrator Routes.
 * This group handles all the url of administrative controlls

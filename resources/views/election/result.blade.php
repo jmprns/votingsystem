@@ -34,13 +34,91 @@
         </ol>
     </div>
     <div class="col-lg-2">
-        <a href="/election/result/{{ $election->id }}" class="btn btn-primary" style="margin-top: 30px;">Election Result</a>
+        {{-- <a href="/election/result/{{ $election->id }}" class="btn btn-primary" style="margin-top: 30px;">Election Result</a> --}}
     </div>
 </div>
 @endsection
 
 {{-- MAIN CONTENT --}}
 @section('main')
+
+<div class="row">
+    <div class="col-lg-7">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Information about {{ $election->name }} </h5>
+                <div class="ibox-tools">
+                    {{-- <a class="btn btn-success btn-xs" href="/election/position/{{ $election->id }}" style="color: white;"><i class="fa fa-plus"></i>&nbsp;&nbsp;<span class="bold">Add New Position</span></a> --}}
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="row">
+
+                    <div class="col-lg-6">
+                        <table class="table table-responsive table-striped">
+                            <tr>
+                                <td><strong>Election Name:</strong></td>
+                                <td>{{ $election->name }}</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>Election Start:</strong></td>
+                                <td>{{ $election->start }}</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>Election End:</strong></td>
+                                <td>{{ $election->end }}</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>Voters:</strong></td>
+                                <td>{{ $count['voters'] }}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <table class="table table-responsive table-striped">
+                            <tr>
+                                <td><strong>Uncasted Votes:</strong></td>
+                                <td>{{ $count['uncast'] }}</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>Casted Votes:</strong></td>
+                                <td>{{ $count['cast'] }}</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>Positions:</strong></td>
+                                <td>{{ $positions->count() }}</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>Candidates:</strong></td>
+                                <td>{{ $count['candidates'] }}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5 center-block">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <a href="/election/result/print/{{ $election->id }}/winner" target="_new" class="btn btn-block btn-lg btn-success"><i class="fa fa-print"></i> Print Winner Result</a>
+                <hr>
+                <a href="/election/result/print/{{ $election->id }}/all" target="_new" class="btn btn-block btn-lg btn-success"><i class="fa fa-print"></i> Print All Result</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @foreach($positions as $position)
 @php($count = $position->candidates->count())
 
@@ -111,8 +189,8 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <div class="table-responsive">
                         @foreach($courses as $course)
+                    <div class="table-responsive">
                         <h4>{{ $course['name'] }}</h4>
                         <hr>
                         <table class="table table-striped table-bordered table-hover">
@@ -142,8 +220,8 @@
                             @endforeach
                             </tbody>
                         </table>
-                        @endforeach
                     </div>
+                        @endforeach
                 </div>
             </div>
         </div>
@@ -171,8 +249,9 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <div class="table-responsive">
+
                         @foreach($years as $year)
+                    <div class="table-responsive">
                         <h4>{{ $year['courseName'] }} - {{ $year['yearName'] }}</h4>
                         <hr>
                         <table class="table table-striped table-bordered table-hover">
@@ -202,8 +281,9 @@
                             @endforeach
                             </tbody>
                         </table>
-                        @endforeach
+                       
                     </div>
+                     @endforeach
                 </div>
             </div>
         </div>

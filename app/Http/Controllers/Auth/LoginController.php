@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+
+use App\Log;
 
 class LoginController extends Controller
 {
@@ -42,4 +45,13 @@ class LoginController extends Controller
     public function username(){
         return 'username';
     }
+
+    public function authenticated(Request $request, $user)
+    {
+        Log::create([
+            'user_id' => $user->id,
+            'description' => 'Access the system.'
+        ]);
+    }
+
 }

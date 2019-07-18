@@ -26,7 +26,6 @@ class CandidateController extends Controller
     {
         
 
-
     }
 
     /**

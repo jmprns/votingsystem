@@ -83,6 +83,17 @@ Route::prefix('party')->group(function(){
 	Route::post('/update', 'PartyController@update');
 });
 
+Route::prefix('settings')->group(function(){
+	Route::get('/', 'SettingsController@index');
+
+	Route::prefix('admin')->group(function(){
+		Route::post('/add', 'SettingsController@add_admin');
+		Route::get('/delete/{id}', 'SettingsController@delete_admin');
+		Route::post('/update', 'SettingsController@update_admin');
+	});
+
+});
+
 
 
 

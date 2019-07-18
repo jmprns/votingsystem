@@ -9,6 +9,8 @@ use App\Candidate;
 use App\Vote;
 use App\Election;
 
+use App\Log;
+
 use Carbon\Carbon;
 
 class BallotController extends Controller
@@ -24,7 +26,13 @@ class BallotController extends Controller
     	$voter = Voter::where('id', $request->username)->where('password', $request->password)->get()->first();
     	if(!$voter){
     		return redirect()->back()->with('error', 'Invalid account.');
-    	}
+        }
+        
+        Log::create([
+            'user_id' => $voter->id,
+            'description' => 'Login in ballot',
+            'user_lvl' => 1
+        ]);
 
         // check if the election is open
         $election = Election::find($voter->elc_id);
@@ -38,6 +46,8 @@ class BallotController extends Controller
         if($voter->cast == 1){
             return redirect('/ballot/handler')->with('type', 2);
         }
+
+
 
 
 
@@ -150,6 +160,13 @@ class BallotController extends Controller
         $voter = Voter::find($vid);
         $voter->cast = 1;
         $voter->save();
+
+        // Loging the actions
+        Log::create([
+            'user_id' => $voter->id,
+            'description' => 'Cast vote.',
+            'user_lvl' => 1
+        ]);
 
         // redirect to cast page
         return redirect('/ballot/handler')->with('type', 1);

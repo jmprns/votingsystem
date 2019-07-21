@@ -12,9 +12,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'Auth\LoginController@browser_verify');
 
 Auth::routes();
 
@@ -38,6 +36,8 @@ Route::prefix('election')->group(function(){
 	Route::get('/', 'ElectionController@index');
 	Route::post('/add', 'ElectionController@create');
 	Route::get('/show/{id}', 'ElectionController@show');
+	Route::post('/delete/{id}', 'ElectionController@delete');
+	Route::post('/update', 'ElectionController@edit');
 
 	// Position Route
 	Route::prefix('position')->group(function(){
@@ -90,7 +90,10 @@ Route::prefix('settings')->group(function(){
 		Route::post('/add', 'SettingsController@add_admin');
 		Route::get('/delete/{id}', 'SettingsController@delete_admin');
 		Route::post('/update', 'SettingsController@update_admin');
+		Route::post('/image', 'SettingsController@image_admin');
 	});
+
+
 
 });
 

@@ -300,7 +300,7 @@
                     <div class="col-lg-4 col-lg-offset-4">
                         <div class="ibox">
                             <div class="ibox-content">
-                                <button onclick="review()" data-toggle="modal" data-target="#review-modal"  class="btn btn-primary btn-block btn-lg">Vote</button>
+                                <button onclick="review()" data-toggle="modal" data-target="#review-modal" data-backdrop="static" data-keyboard="false"  class="btn btn-primary btn-block btn-lg">Vote</button>
                             </div>
                         </div>
                     </div>
@@ -311,7 +311,7 @@
                     <div id="review-modal-whirl" class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                
                                 <h4 class="modal-title" id="myModalLabel">Online Voting System</h4>
                             </div>
                             <div class="modal-body">

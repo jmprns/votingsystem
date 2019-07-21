@@ -24,7 +24,7 @@ class SettingsController extends Controller
         $logs['users'] = Log::with('user')->where('user_lvl', 0)->get();
         $logs['voters'] = Log::with('voter')->where('user_lvl', 1)->get();
 
-        $votes = Vote::with('candidate.election', 'voter')->get();
+        $votes = Vote::with('candidate.election', 'candidate.info', 'voter')->get();
 
         return view('settings.index')
                 ->with('logs', $logs)
@@ -136,6 +136,40 @@ class SettingsController extends Controller
         $user->delete();
 
         return redirect('/settings')->with('success', 'User has been deleted.');
+    }
+
+    public function image_admin(Request $request)
+    {
+        // Validating image
+        if($request->image == "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCADIAMgDAREAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AJ/4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//Z"){
+            return response()->json([
+                'message' => 'Image is invalid.'
+            ],406);
+        }
+
+        if($request->image == ''){
+            return response()->json([
+                'message' => 'Please upload an image.'
+            ],406);
+        }
+
+        //Image Decoding
+        $image = $request->image;
+        $image = str_replace('data:image/jpeg;base64,', '', $image);
+        $image = str_replace(' ', '+', $image);
+        $imageName = time().str_random(10).".jpg";
+        $destination = public_path()."/img/users/".$imageName;
+        $actualImage = base64_decode($image);
+        $move = file_put_contents($destination, $actualImage);
+
+        $user = User::find(Auth::id());
+        $user->image = $imageName;
+        $user->save();
+
+        return response()->json([
+                'message' => 'Image has been updated.'
+        ],200);
+
     }
 
 }

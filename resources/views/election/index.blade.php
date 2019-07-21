@@ -38,12 +38,14 @@ Election List
 {{-- MAIN CONTENT --}}
 @section('main')
 <div class="row">
-    <div class="col-lg-12">
+    <div class="col-lg-12" id="election-col">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <h5>Election List</h5>
                 <div class="ibox-tools">
+                    @if(Auth::user()->lvl == 0)
                     <button class="btn btn-success btn-xs" data-toggle="modal" data-target="#election-add"><i class="fa fa-plus"></i>&nbsp;&nbsp;<span class="bold">Add New Election</span></button>
+                    @endif
                 </div>
             </div>
             <div class="ibox-content">
@@ -63,23 +65,31 @@ Election List
                         <tbody>
                             @php($x = 1)
                             @foreach($elections as $election)
+                                @php($elc_start = explode(' ', $election->start))
+                                @php($elc_end = explode(' ', $election->end))
                             <tr>
                                 <td>{{ $x++ }}</td>
                                 <td><strong><a href="/election/show/{{ $election->id }}">{{ $election->name }}</a></strong></td>
                                 <td>{{ $election->candidates->count() }}</td>
                                 <td>{{ $election->voters->count() }}</td>
-                                <td><a title="Casted Votes">{{ $election->voters->where('cast', '1')->count() }}</a> || <a title="Uncast Votes">{{ $election->voters->where('cast', '0')->count() }}</a></td>
+                                <td>
+                                    <strong>Casted:</strong> {{ $election->voters->where('cast', '1')->count() }}
+                                    <br> 
+                                    <strong>Uncasted: </strong>{{ $election->voters->where('cast', '0')->count() }}
+                                </td>
                                 <td>
                                     <strong>Start: </strong>{{ $election->start }} <br>
                                     <strong>End: </strong>{{ $election->end }}
                                 </td>
                                 <td align="center">
-                                    <button class="btn btn-warning btn-sm btn-bitbucket" title="Edit">
+                                    @if(Auth::user()->lvl == 0)
+                                    <button onclick="editElection('{{ $election->id }}', '{{ $election->name }}', '{{ $elc_start[0] }}', '{{ $elc_start[1] }}', '{{ $elc_end[0] }}', '{{ $elc_end[1] }}')" class="btn btn-warning btn-sm btn-bitbucket" title="Edit">
                                         <i class="fa fa-pencil"></i>
                                     </button>
-                                    <button class="btn btn-danger btn-sm btn-bitbucket" title="Delete">
+                                    <button onclick="deleteElection('{{ $election->id }}')" class="btn btn-danger btn-sm btn-bitbucket" title="Delete">
                                         <i class="fa fa-trash-o"></i>
                                     </button>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach
@@ -90,6 +100,8 @@ Election List
         </div>
     </div>
 </div>
+
+@if(Auth::user()->lvl == 0)
 
 <div class="modal inmodal fade" id="election-add" tabindex="-1" role="dialog"  aria-hidden="true">
     <div id="add-election-whirl" class="modal-dialog">
@@ -158,7 +170,7 @@ Election List
 </div>
 
 <div class="modal inmodal fade" id="election-edit" tabindex="-1" role="dialog"  aria-hidden="true">
-    <div id="add-election-whirl" class="modal-dialog">
+    <div id="edit-election-whirl" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -171,7 +183,8 @@ Election List
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="control-label">Election Name</label>
-                                <input required type="text" id="electionName" class="form-control">
+                                <input type="hidden" id="edit-elc-id" name="elc_id" value="">
+                                <input required type="text" id="edit-elc-name" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -181,14 +194,14 @@ Election List
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="control-label">Election Start Date</label>
-                                <input required type="date" id="start-date" class="form-control">
+                                <input required type="date" id="edit-elc-start-date" class="form-control">
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="control-label">Election Start Time</label>
-                                <input required type="time" id="start-time" class="form-control">
+                                <input required type="time" id="edit-elc-start-time" class="form-control">
                             </div>
                         </div>
 
@@ -199,14 +212,14 @@ Election List
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="control-label">Election End Date</label>
-                                <input required type="date" id="end-date" class="form-control">
+                                <input required type="date" id="edit-elc-end-date" class="form-control">
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="control-label">Election End Time</label>
-                                <input required type="time" id="end-time" class="form-control">
+                                <input required type="time" id="edit-elc-end-time" class="form-control">
                             </div>
                         </div>
                         
@@ -216,13 +229,13 @@ Election List
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Add Election</button>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
             </div>
             </form>
         </div>
     </div>
 </div>
-
+@endif
 
 @endsection
 
@@ -273,7 +286,7 @@ $(document).ready(function(){
 
 $('#add-election-form').submit(function(e){
 
-     e.preventDefault();
+    e.preventDefault();
 
     $.ajax({
         url: "/election/add",
@@ -323,6 +336,127 @@ $('#add-election-form').submit(function(e){
         }
     });
 });
+
+$('#edit-election-form').submit(function(e){
+
+    e.preventDefault();
+
+    $.ajax({
+        url: "/election/update",
+        type: 'POST',
+        dataType: 'json',
+        data:{
+            '_token' : $("meta[name='_token']").attr("content"),
+            'electionId' : $('#edit-elc-id').val(),
+            'electionName' : $('#edit-elc-name').val(),
+            'startDate' : $('#edit-elc-start-date').val(),
+            'startTime' : $('#edit-elc-start-time').val(),
+            'endDate' : $('#edit-elc-end-date').val(),
+            'endTime' : $('#edit-elc-end-time').val()
+        },
+        success:function(Result)
+        {   
+            $("#election-edit").modal('toggle');
+
+            swal({
+                title: "Success",
+                text: "The election has been updated.",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Ok",
+                closeOnConfirm: false
+            }, function () {
+               location.reload();
+            });
+            
+
+        },
+        error:function(xhr){
+            if(xhr.status == 406){
+                var message_er = JSON.parse(xhr.responseText);
+                toastr.error(message_er['message']);
+            }else if(xhr.status == 422){
+                toastr.error("All fields are required!");
+            }
+        },
+        beforeSend: function(){
+            var element = document.getElementById('edit-election-whirl');
+            element.classList.add("whirl", "traditional");
+        },
+        complete: function(){
+            var element = document.getElementById('edit-election-whirl');
+            element.classList.remove("whirl", "traditional");
+        }
+    });
+});
+
+function editElection(id, elcname, startDate, startTime, endDate, endTime){
+    $('#edit-elc-id').val(id);
+    $('#edit-elc-name').val(elcname);
+    $('#edit-elc-start-date').val(startDate);
+    $('#edit-elc-start-time').val(startTime);
+    $('#edit-elc-end-date').val(endDate);
+    $('#edit-elc-end-time').val(endTime);
+    $('#election-edit').modal('toggle');
+}
+
+function deleteElection(id){
+    swal({
+        title: "Delete this election?",
+        text: "Linked information to this election will also be delete. Continue?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes",
+        closeOnConfirm: true
+    }, function () {
+
+
+        $.ajax({
+            url: "/election/delete/"+id,
+            type: 'POST',
+            dataType: 'json',
+            data:{
+                '_token' : $("meta[name='_token']").attr("content"),
+                'election_id' : id
+            },
+            success:function(Result)
+            {   
+                swal({
+                    title: "Success",
+                    text: "The election has been deleted.",
+                    type: "success",
+                    showCancelButton: false,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Ok",
+                    closeOnConfirm: false
+                }, function () {
+                   location.reload();
+                });
+                
+
+            },
+            error:function(xhr){
+                if(xhr.status == 406){
+                    var message_er = JSON.parse(xhr.responseText);
+                    toastr.error(message_er['message']);
+                }else if(xhr.status == 422){
+                    toastr.error("All fields are required!");
+                }
+            },
+            beforeSend: function(){
+                var element = document.getElementById('election-col');
+                element.classList.add("whirl", "traditional");
+            },
+            complete: function(){
+                var element = document.getElementById('election-col');
+                element.classList.remove("whirl", "traditional");
+            }
+        });
+       
+    });
+}
 </script>
 
 @endsection

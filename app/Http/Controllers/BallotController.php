@@ -38,8 +38,12 @@ class BallotController extends Controller
         $election = Election::find($voter->elc_id);
         $start = Carbon::parse($election->start);
         $end = Carbon::parse($election->end);
-        if($start > Carbon::now() || $end < Carbon::now()){
+        if($start > Carbon::now()){
             return redirect('/ballot/handler')->with('type', 3);
+        }
+
+        if($end < Carbon::now()){
+            return redirect('/ballot/handler')->with('type', 4);
         }
 
         // check if voter already cast vote

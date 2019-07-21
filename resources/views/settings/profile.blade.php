@@ -65,13 +65,18 @@
 
 <h2>Image</h2>
 <hr>
-<img src="{{ asset('img/users') }}/{{ Auth::user()->image }}" class="img-responsive img-thumbnail" style="margin-bottom: 30px;">
 
+<img id="cand-image" src="{{ asset('img/users') }}/{{ Auth::user()->image }}" class="img-responsive img-thumbnail" style="margin-bottom: 30px;">
+
+
+<form method="POST" id="update-image-admin">
 <div class="row">
     <div class="col-lg-4">
-        <input type="file" class="form-control">
+        <input type="hidden" id="crop-image" value="">
+        <input type="file" name="upload_image" id="upload_image" accept="image/*" class="form-control" required>
     </div>
     <div class="col-lg-2">
         <button class="btn btn-primary" type="submit">Save</button>
     </div>
 </div>
+</form>

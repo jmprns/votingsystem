@@ -121,7 +121,7 @@
                                 <th>#</th>
                                 <th>Image</th>
                                 <th>Name</th>
-                                <th>Course - Year</th>
+                                <th>Strand - Year</th>
                                 <th>Position</th>
                                 <th>Party</th>
                                 <th>Action</th>
@@ -175,7 +175,7 @@
                                 <th>User ID</th>
                                 <th>Password</th>
                                 <th>Name</th>
-                                <th>Course - Year</th>
+                                <th>Strand - Year</th>
                                 <th>Vote Status</th>
                                 <th>Action</th>
                             </tr>

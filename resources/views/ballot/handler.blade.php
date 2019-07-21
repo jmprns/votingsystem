@@ -26,12 +26,12 @@
 
         case 3:
             $title = 'Election is closed.';
-            $message = 'The election your requesting as closed as the moment. Please try again later.';
+            $message = 'The election your requesting is closed as the moment. Please try again later.';
         break;
 
         case 4:
-            $title = '';
-            $message = '';
+            $title = 'Election is finished.';
+            $message = 'The election your requesting is already finished. Thank you for using Online Voting System.';
         break;
         
         default:

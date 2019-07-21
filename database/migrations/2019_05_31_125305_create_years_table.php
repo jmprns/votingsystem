@@ -38,31 +38,7 @@ class CreateYearsTable extends Migration
 
         Year::create(['name' => 'Grade 11', 'course_id' => '5']);
         Year::create(['name' => 'Grade 12', 'course_id' => '5']);
-
-        Year::create(['name' => 'First Year', 'course_id' => '6']);
-        Year::create(['name' => 'Second Year', 'course_id' => '6']);
-        Year::create(['name' => 'Third Year', 'course_id' => '6']);
-        Year::create(['name' => 'Fourth Year', 'course_id' => '6']);
-
-        Year::create(['name' => 'First Year', 'course_id' => '7']);
-        Year::create(['name' => 'Second Year', 'course_id' => '7']);
-        Year::create(['name' => 'Third Year', 'course_id' => '7']);
-        Year::create(['name' => 'Fourth Year', 'course_id' => '7']);
-
-        Year::create(['name' => 'First Year', 'course_id' => '8']);
-        Year::create(['name' => 'Second Year', 'course_id' => '8']);
-        Year::create(['name' => 'Third Year', 'course_id' => '8']);
-        Year::create(['name' => 'Fourth Year', 'course_id' => '8']);
-
-        Year::create(['name' => 'First Year', 'course_id' => '9']);
-        Year::create(['name' => 'Second Year', 'course_id' => '9']);
-        Year::create(['name' => 'Third Year', 'course_id' => '9']);
-        Year::create(['name' => 'Fourth Year', 'course_id' => '9']);
-
-        Year::create(['name' => 'First Year', 'course_id' => '10']);
-        Year::create(['name' => 'Second Year', 'course_id' => '10']);
-        Year::create(['name' => 'Third Year', 'course_id' => '10']);
-        Year::create(['name' => 'Fourth Year', 'course_id' => '10']);
+        
     }
 
     /**

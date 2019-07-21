@@ -9,7 +9,7 @@ table {
   width: 100%;
 }
 
-h1, h2{
+h1, h2, h3{
 	font-family: arial, sans-serif;
 }
 
@@ -22,6 +22,11 @@ td, th {
   text-align: center;
   padding: 8px;
 }
+
+.right{
+	text-align: right;
+}
+
 
 </style>
 </head>
@@ -56,7 +61,7 @@ td, th {
                 @php($cname = explode('__', $candidate->info->name))
                     <tr>
                         <td colspan="3"><strong>{{ $position->name }}</strong></td>
-                        <td colspan="3">{{ $cname[0] }}, {{ $cname[1] }} {{ @$cname[2][0] }}</td>
+                        <td colspan="3">{{ $cname[0] }}, {{ $cname[1] }} {{ @$cname[2][0] }}.</td>
                         <td colspan="3">{{ $candidate->party->name }}</td>
                         <td>{{ $voters->count() }}</td>
                         <td>{{ $candidate->votes_count }}</td>
@@ -149,7 +154,16 @@ td, th {
 		@endforeach
 	</tbody>
 </table>
+<div class="right">
+	<p><strong>Total Voters:</strong> {{ $voters->count() }}</p>
+	<p><strong>Uncasted Votes:</strong> {{ $voters->where('cast', 0)->count() }}</p>
+	<p><strong>Casted Votes:</strong> {{ $voters->where('cast', 1)->count() }}</p>
+</div>
 
+<h2>PROOFREAD BY:</h2>
+<br><br>
+@php($name = explode('__', Auth::user()->name))
+<h3>{{ strtoupper($name[1]) }} {{ strtoupper($name[2][0]) }}. {{ strtoupper($name[0]) }}</h3>
 <script>
 	window.print();
 </script>

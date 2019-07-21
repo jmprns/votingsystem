@@ -37,7 +37,7 @@
                 <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
 
                 <p class="text-muted text-center"><small>Are you a voter?</small></p>
-                <a class="btn btn-sm btn-white btn-block" href="register.html">Ballot Login</a>
+                <a class="btn btn-sm btn-white btn-block" href="/ballot">Ballot Login</a>
             </form>
             <p class="m-t"> <small>Developed by: <a href="http://facebook.com/jp.pagapulan">Jimwell Parinas</a> &copy; {{ date('Y', time()) }}</small> </p>
         </div>

@@ -10,6 +10,8 @@ use App\Election;
 use App\Voter;
 use App\Position;
 use App\Candidate;
+use App\Vote;
+use App\Log;
 
 class ElectionController extends Controller
 {
@@ -108,5 +110,76 @@ class ElectionController extends Controller
                 ->with('voters', $voters);
     }
 
+    public function edit(Request $request)
+    {
+        //Requiring all fields
+        $request->validate([
+            'electionName' => 'required',
+            'startDate' => 'required',
+            'startTime' => 'required',
+            'endDate' => 'required',
+            'endTime' => 'required'
+        ]);
+
+
+        // Parsing input time to Carbon Object
+        $start = Carbon::parse($request->startDate." ".$request->startTime);
+        $end = Carbon::parse($request->endDate." ".$request->endTime);
+
+        // Checking if time is correct
+        if($start > $end){
+
+            return response()->json([
+                'message' => "Invalid time range."
+            ], 406);
+
+        }
+
+        $election = Election::find($request->electionId);
+        $election->name = $request->electionName;
+        $election->start = $start;
+        $election->end = $end;
+        $election->save();
+
+        return response()->json([
+            'message' => 'Election has been updated.'
+        ],200);
+    }
+
+    /**
+    *
+    * Election Delete
+    * Handle deleteting of specifi election
+    * URL : /election/delete/{id}
+    *
+    */
+    public function delete(Request $request, $id)
+    {
+        // Deleting all positions
+        Position::where('elc_id', $id)->delete();
+
+        $candidates = Candidate::where('elc_id', $id)->get();
+        foreach($candidates as $candidate){
+            // Deleting all votes
+            Vote::where('candidate_id', $candidate->id)->delete();
+        }
+        // Deleting the candidate
+        Candidate::where('elc_id', $id)->delete();
+
+        $voters = Voter::where('elc_id', $id)->get();
+        foreach($voters as $voter){
+            Log::where('user_lvl', 1)->where('user_id', $voter->id)->delete();
+        }
+        Voter::where('elc_id', $id)->delete();
+
+        Election::find($id)->delete();
+
+        return response()->json([
+            'message' => 'Election has been deleted.'
+        ],200);
+
+
+
+    }
 
 }

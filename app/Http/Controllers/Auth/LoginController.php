@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 use App\Log;
 
+use Agent;
+
 class LoginController extends Controller
 {
     /*
@@ -52,6 +54,15 @@ class LoginController extends Controller
             'user_id' => $user->id,
             'description' => 'Access the system.'
         ]);
+    }
+
+    public function browser_verify()
+    {
+        $info = Agent::browser();
+        $infos = Agent::version($info);
+        $platform = Agent::device();
+
+        return var_dump($platform);
     }
 
 }

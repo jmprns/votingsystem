@@ -42,7 +42,7 @@
             <ul class="nav metismenu" id="side-menu">
                 <li class="nav-header">
                     <div class="dropdown profile-element"> <span>
-                            <img alt="image" class="img-circle" src="{{ asset('img/users/default.jpg') }}" width="50px" height="50px" />
+                            <img alt="image" class="img-circle" src="{{ asset('img/users') }}/{{ Auth::user()->image }}" width="50px" height="50px" />
                              </span>
                             @php($adminName = explode('__',Auth::user()->name))
                             <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold" style="color: white;">{{ $adminName[1] }} {{ $adminName[0] }}</strong>

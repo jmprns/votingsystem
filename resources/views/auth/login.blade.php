@@ -17,8 +17,14 @@
   <div class="limiter">
     <div class="container-login100" style="background-image: url('{{ asset('media/bg') }}/{{ lbg() }}');">
       <div class="wrap-login100 p-t-30 p-b-50">
+
+
         <span class="login100-form-title p-b-41">
-          WUP VOTING SYSTEM
+          <img src="{{ asset('media/seal.png') }}" alt="" width="100px" height="100px">
+
+          <br>
+
+          WU-P AURORA <br> ONLINE VOTING SYSTEM
         </span>
         <form id="voter-login-form" method="POST" action="/login" class="login100-form validate-form p-b-33 p-t-5">
         @csrf
